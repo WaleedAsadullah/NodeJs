@@ -1,57 +1,44 @@
-const app = require('./app.js');
+const express = require('express');
+// const addListener = require('nodemon');
+const app = express();
+const middleware = require('./middleware')
 
-// console.log(app);
-// console.log("su2b");
+const route = express.Router()
 
-const fs = require('fs');
-const  http = require('http');
+app.set('view engine','ejs')
+route.use(middleware)
 
-// fs.writeFileSync('first/first.txt',"Hello");
+// const middleware_name_any =  (req,resp,next)=>{
+//     console.log('middleware')
+//     next()
+// }
 
-// const fs2 = require('fs').writeFileSync;
+// application middleware
+// app.use(middleware_name_any)
 
-// fs2('first2.txt',"Hello");
-
-
-
-// http.createServer((req,resp)=>{
-//     resp.write("Hello world");
-//     resp.end;
-// }).listen(4800);
-
-// http.createServer(function (req, res) {
-//     res.writeHead(200, {'Content-Type': 'text/html'});
-//     res.end('Hello World!');
-//   }).listen(8080);
-
-
-// http.createServer((req,resp)=>{
-//   resp.writeHead(200,{'Content-Type': 'application/json'});
-//   resp.write(JSON.stringify({name:'waleed'}))
-// }).listen(8080)
-
-
-// get values from text field
-// console.log(process.argv);
-let a = 10
-let b = 20;
-
-setTimeout(()=>{
-    b =30;
-},100)
-
-console.log(a+b);
-
-
-
-
-let waitdata = new Promise((resolve,reject)=>{
-    setTimeout(()=>{
-        resolve(30);
-    },100)
-})
-waitdata.then((data)=>{
-    b = data;
-    console.log(a+data);
+//single route middleware
+app.get('/profile',middleware,(req,resp)=>{
+    const user = {
+        name:'waleed'
+    }
+    resp.render('profile',{user})
 })
 
+//group middleware
+
+route.get('/about-us',(req,resp)=>{
+    const user = {
+        name:'waleed'
+    }
+    resp.send('about us')
+})
+
+route.get('/contact-us',(req,resp)=>{
+    const user = {
+        name:'waleed'
+    }
+    resp.send('contact us')
+})
+app.use('/',route)
+
+app.listen(5000)
